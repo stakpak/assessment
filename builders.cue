@@ -14,6 +14,7 @@ builders: v2alpha1.#Environments & {
 	prod: {
 		flows: {
 			"ignore-k8s-cluster": pipeline: [{traits.#KubernetesCluster}]
+			"ignore-secrets": pipeline: [{traits.#Secret}]
 			"k8s/resources": pipeline: [
 				kubernetes.#AddKubernetesResources,
 			]

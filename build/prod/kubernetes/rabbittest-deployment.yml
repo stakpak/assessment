@@ -18,15 +18,24 @@ spec:
       containers:
         - name: default
           image: pivotalrabbitmq/perf-test
+          command: []
           args:
             - --uri
             - $(RABBIT_MQ_URI)
             - --queue
             - queue
             - --rate
-            - 60
+            - "10"
           env:
             - name: RABBIT_MQ_URI
               value: amqp://default_user_CEp19JlfPtw3PciCnK5:aJo_RRJZvSK_fwMvuyFAaCUsX2mZ0A8z@rabbit.rabbitmq.svc.cluster.local:5672
+          resources:
+            requests:
+              cpu: "4"
+              memory: 4Gi
       restartPolicy: Always
       serviceAccountName: rabbittest
+      securityContext:
+        runAsUser: 10000
+        runAsGroup: 10000
+        fsGroup: 10000
