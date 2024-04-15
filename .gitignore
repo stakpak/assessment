@@ -1,3 +1,4 @@
 cue.mod/pkg
 .terraform*
 *.tfstate*
+ing-test.yaml

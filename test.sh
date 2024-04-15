@@ -1,4 +1,5 @@
 #!/bin/bash
+# for manual testing
 
 kubectl -n rabbitmq run perf-test --image pivotalrabbitmq/perf-test --command sleep 3000
 
