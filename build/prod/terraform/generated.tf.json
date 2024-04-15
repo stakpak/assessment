@@ -48,6 +48,19 @@
         "values": [
           "{}\n"
         ],
+        "depends_on": ["helm_release.metallb"]
+      },
+      "metallb": {
+        "name": "metallb",
+        "namespace": "metallb-system",
+        "repository": "https://metallb.github.io/metallb",
+        "chart": "metallb",
+        "timeout": 600,
+        "atomic": true,
+        "create_namespace": true,
+        "values": [
+          "{}\n"
+        ],
         "depends_on": []
       }
     }

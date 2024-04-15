@@ -1,23 +1,24 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
 metadata:
-  name: rabbittest
-  labels: {}
-  annotations: {}
+  name: rabbitmq-scaledobject
+  namespace: rabbitmq
 spec:
   scaleTargetRef:
     name: rabbittest
     kind: Deployment
     apiVersion: apps/v1
+  idleReplicaCount: 1
   pollingInterval: 30
-  cooldownPeriod: 300
-  idleReplicaCount: 0
-  minReplicaCount: 1
-  maxReplicaCount: 3
+  maxReplicaCount: 5
+  minReplicaCount: 2
   triggers:
-    - type: rabbitmq
-      metadata:
-        value: "20"
-        queueName: queue
-        mode: MessageRate
-        hostFromEnv: RABBIT_MQ_URI
-apiVersion: keda.sh/v1alpha1
-kind: ScaledObject
+  - type: rabbitmq
+    metadata:
+      protocol: amqp
+      queueName: queue
+      mode: QueueLength
+      value: "200"
+      metricName: custom-testqueue
+    authenticationRef:
+      name: keda-trigger-auth-rabbitmq-conn
