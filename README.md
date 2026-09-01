@@ -1,47 +1,38 @@
-# Stakpak Assessment
-
-## Overview
-This is a kubernetes cluster setup using [Kind](https://kind.sigs.k8s.io/) and have three core components:
-- [Ingress Nginx](https://kubernetes.github.io/ingress-nginx/)
-- [KEDA](https://keda.sh/)
-- [RabbitMQOperator](https://www.rabbitmq.com/kubernetes/operator/operator-overview)
-
-## Prerequisites
-- [Docker](https://docs.docker.com/get-docker/)
-- [Kind](https://kind.sigs.k8s.io/docs/user/quick-start/)
-- [Kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
-- [Helm](https://helm.sh/docs/intro/install/)
-- [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
-
 ## Setup
 1. Create a Kind cluster
 ```bash
 kind create cluster --config kind-config.yaml
 ```
-
-2. Install Core Components
+2. Install Core Components without ingress
 ```bash
 terraform -chdir=build/prod/terraform init && terraform -chdir=build/prod/terraform apply
 ```
 
-3. Apply Manifests
+3. Install nginx-ingress
+```bash
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm install ingress-nginx ingress-nginx/ingress-nginx --version 4.0.5 -n ingress-nginx --create-namespace
+```
+
+4. apply kubernetes yaml files
 ```bash
 kubectl apply -f ./build/prod/kubernetes
 ```
 
-## Requirements
+## all components are running and healthy :tada: :tada:
+## deployment scaled to maximum replicas :tada: :tada:
 
-- Ensure all components are running and healthy
-- Modify `rabbittest` deployment args to make it scale to maximum replicas
-- Create an Ingress resource to expose rabbitmq management UI
+<img title="a title" alt="Alt text" src="./img/healthy.png">
 
-## Notes
-- You are free to use any tools or resources to complete the task
-- You can modify the existing manifests or create new ones including kind configuration
-- `perf-test(rabbittest)` is a performance test tool that can be used to test the RabbitMQ cluster so don't keep it running for long
 
-## Bonus
-- Use our own open-source tool [Devx](https://devx.stakpak.dev/) to modify the manifests
+# notes
+- needed to install nginx-ingress without terraform cause it doesn't generate external ip in local
+- i worked with bitnami/rabbitmq image
+- needed to edit the user in the rabbittest deployment to 1000 not 10000
+- i created keda-rabbitmq-secret and TriggerAuthentication with the scaledobject like the documentation
+- i am using http protocol and port 15672 with the scaledobject  to use mode: MessageRate althoug i am using amqp protocol and port 5672 for perf-test
+- i made an alias for the localhost as rabbitmq.com and i can reach ingress or any svc using kubectl port-forward
 
-## Submission
-- Fork this repository and submit a PR with your changes
+
+
+

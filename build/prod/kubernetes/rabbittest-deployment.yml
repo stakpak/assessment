@@ -22,20 +22,21 @@ spec:
           args:
             - --uri
             - $(RABBIT_MQ_URI)
-            - --queue
+            - -u
             - queue
-            - --rate
-            - "10"
+            - -r
+            - "50"
           env:
             - name: RABBIT_MQ_URI
-              value: amqp://default_user_CEp19JlfPtw3PciCnK5:aJo_RRJZvSK_fwMvuyFAaCUsX2mZ0A8z@rabbit.rabbitmq.svc.cluster.local:5672
+              value: amqp://user:user@rabbitmqop.rabbitmq.svc.cluster.local:5672
           resources:
             requests:
-              cpu: "4"
-              memory: 4Gi
+              cpu: "2"
+              memory: 2Gi
       restartPolicy: Always
       serviceAccountName: rabbittest
       securityContext:
-        runAsUser: 10000
-        runAsGroup: 10000
-        fsGroup: 10000
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+
